@@ -21,15 +21,15 @@ try{
 }
 //チェック
 $stmt = $db->prepare("select email from users where email = :email");
-$check = $stmt->execute([
+$stmt->execute([
     ':email'=>$email
 ]);
-if($check){
+$check = $stmt->fetch(PDO::FETCH_ASSOC);
+if($check["email"]){
     echo "そのメールアドレスはすでに登録されています";
     echo '<a href="new.php">新規登録画面へ</a>';
     exit();
 }
-
 $stmt = $db->prepare("insert into users (name, email, password) values (:name, :email, :password)");
 $stmt->execute([
     ':name'=>$username,
@@ -39,7 +39,6 @@ $stmt->execute([
 //接続切る
 $db = null;
 
-echo "$usernameで登録完了しました";
 
 print '<a href="../login/new.php">ログイン画面</a>';
 
